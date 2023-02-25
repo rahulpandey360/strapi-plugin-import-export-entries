@@ -1,0 +1,35 @@
+{
+	"version": 2,
+	"data": {
+		"component.component": {
+			"2": {
+				"id": 2,
+				"name": "bowler",
+				"description": "mule"
+			},
+			"3": {
+				"id": 3,
+				"name": "king",
+				"description": "gunpowder"
+			}
+		},
+		"api::collection-type.collection-type-simple": {
+			"1": {
+				"id": 1,
+				"title": "webmail",
+				"description": "hydrolyze",
+				"startDateTime": "2022-08-31T17:24:13.187Z",
+				"enabled": false,
+				"createdAt": "2022-09-01T09:00:00.000Z",
+				"updatedAt": "2022-09-01T09:00:00.000Z",
+				"component": null,
+				"componentRepeatable": [
+					2,
+					3
+				],
+				"createdBy": null,
+				"updatedBy": null
+			}
+		}
+	}
+}

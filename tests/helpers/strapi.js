@@ -1,7 +1,7 @@
 const Strapi = require('@strapi/strapi');
 const fs = require('fs');
 
-const DELETE_DB_ENABLED = false;
+const DELETE_DB_ENABLED = true;
 const CLEANUP_DB_ENABLED = true;
 
 const LOCALES = [

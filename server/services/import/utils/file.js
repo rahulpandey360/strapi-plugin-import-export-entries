@@ -4,7 +4,7 @@ const last = require('lodash/last');
 const trim = require('lodash/trim');
 const os = require('os');
 const path = require('path');
-const request = require('request');
+const axios = require('axios');
 
 const { isObjectSafe } = require('../../../../libs/objects');
 
@@ -120,29 +120,27 @@ const importFile = async ({ id, url, name, alternativeText, caption }, user) => 
 
 const fetchFile = (url) => {
   return new Promise((resolve, reject) => {
-    request({ url: encodeURI(url), method: 'GET', encoding: null }, async (err, res, body) => {
-      if (err) {
+    axios
+      .get(encodeURI(url))
+      .then(async (res) => {
+        if (res.status < 200 || 300 <= res.status) {
+          reject(new Error(`Tried to fetch file from url ${url} but failed with status code ${res.statusCode}`));
+        }
+        const type = res.headers['content-type'].split(';').shift();
+        const size = parseInt(res.headers['content-length']) | 0;
+
+        const fileData = getFileDataFromRawUrl(url);
+        const filePath = await writeFile(fileData.name, res.data);
+        resolve({
+          name: fileData.name,
+          type,
+          size,
+          path: filePath,
+        });
+      })
+      .catch((err) => {
         reject(err);
-        return;
-      }
-
-      if (res.statusCode < 200 || 300 <= res.statusCode) {
-        reject(new Error(`Tried to fetch file from url ${url} but failed with status code ${res.statusCode}`));
-      }
-
-      const type = res.headers['content-type'].split(';').shift();
-      const size = parseInt(res.headers['content-length']) | 0;
-
-      const fileData = getFileDataFromRawUrl(url);
-      const filePath = await writeFile(fileData.name, body);
-
-      resolve({
-        name: fileData.name,
-        type,
-        size,
-        path: filePath,
       });
-    });
   });
 };
 

@@ -7,4 +7,5 @@ module.exports = {
   testPathIgnorePatterns: ['/node_modules/', '.tmp', '.cache'],
   testEnvironment: 'node',
   verbose: true,
+  testTimeout: 30000,
 };

@@ -126,7 +126,7 @@ describe('export service', () => {
       const SLUG = SLUGS.COLLECTION_TYPE_SIMPLE;
 
       const CONFIG = {
-        [SLUG]: [generateData(SLUG, { id: 1, componentRepeatable: [generateData(SLUGS.COMPONENT_COMPONENT, { id: 1 }), generateData(SLUGS.COMPONENT_COMPONENT, { id: 2 })] })],
+        [SLUG]: [generateData(SLUG, { id: 1, componentRepeatable: [generateData(SLUGS.COMPONENT_COMPONENT, { id: 2 }), generateData(SLUGS.COMPONENT_COMPONENT, { id: 3 })] })],
       };
 
       await Promise.all(CONFIG[SLUG].map((datum) => strapi.entityService.create(SLUG, { data: datum })));
@@ -210,7 +210,7 @@ describe('export service', () => {
       const SLUG = SLUGS.SINGLE_TYPE_SIMPLE;
 
       const CONFIG = {
-        [SLUG]: [generateData(SLUG, { id: 1, component: generateData(SLUGS.COMPONENT_COMPONENT, { id: 1 }) })],
+        [SLUG]: [generateData(SLUG, { id: 1, component: generateData(SLUGS.COMPONENT_COMPONENT, { id: 4 }) })],
       };
 
       await Promise.all(CONFIG[SLUG].map((datum) => strapi.entityService.create(SLUG, { data: datum })));
@@ -237,7 +237,7 @@ describe('export service', () => {
       const SLUG = SLUGS.SINGLE_TYPE_SIMPLE;
 
       const CONFIG = {
-        [SLUG]: [generateData(SLUG, { id: 1, componentRepeatable: [generateData(SLUGS.COMPONENT_COMPONENT, { id: 1 }), generateData(SLUGS.COMPONENT_COMPONENT, { id: 2 })] })],
+        [SLUG]: [generateData(SLUG, { id: 1, componentRepeatable: [generateData(SLUGS.COMPONENT_COMPONENT, { id: 5 }), generateData(SLUGS.COMPONENT_COMPONENT, { id: 6 })] })],
       };
 
       await Promise.all(CONFIG[SLUG].map((datum) => strapi.entityService.create(SLUG, { data: datum })));
