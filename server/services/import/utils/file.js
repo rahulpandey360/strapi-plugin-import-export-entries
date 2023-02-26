@@ -121,21 +121,26 @@ const importFile = async ({ id, url, name, alternativeText, caption }, user) => 
 const fetchFile = (url) => {
   return new Promise((resolve, reject) => {
     axios
-      .get(encodeURI(url))
+      .get(encodeURI(url), { responseType: 'stream' })
       .then(async (res) => {
         if (res.status < 200 || 300 <= res.status) {
-          reject(new Error(`Tried to fetch file from url ${url} but failed with status code ${res.statusCode}`));
+          reject(new Error(`Tried to fetch file from url ${url} but failed with status code ${res.status}`));
         }
         const type = res.headers['content-type'].split(';').shift();
         const size = parseInt(res.headers['content-length']) | 0;
-
         const fileData = getFileDataFromRawUrl(url);
-        const filePath = await writeFile(fileData.name, res.data);
-        resolve({
-          name: fileData.name,
-          type,
-          size,
-          path: filePath,
+        const writer = await streamWriter(fileData.name);
+        res.data.pipe(writer);
+        writer.on('finish', () => {
+          resolve({
+            name: fileData.name,
+            type,
+            size,
+            path: writer.path,
+          });
+        });
+        writer.on('error', (err) => {
+          reject(err);
         });
       })
       .catch((err) => {
@@ -144,17 +149,10 @@ const fetchFile = (url) => {
   });
 };
 
-const writeFile = async (name, content) => {
+const streamWriter = async (name) => {
   const tmpWorkingDirectory = await fse.mkdtemp(path.join(os.tmpdir(), 'strapi-upload-'));
-
   const filePath = path.join(tmpWorkingDirectory, name);
-  try {
-    fs.writeFileSync(filePath, content);
-    return filePath;
-  } catch (err) {
-    strapi.log.error(err);
-    throw err;
-  }
+  return fs.createWriteStream(filePath);
 };
 
 const deleteFileIfExists = (filePath) => {
